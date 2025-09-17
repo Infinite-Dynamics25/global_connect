@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
+import 'screens/dashboard_page.dart'; // Import the new dashboard page
 
 void main() {
   runApp(const MyApp());
@@ -14,10 +15,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login & Register App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: '/',
+      // Set the initial route for testing
+      initialRoute: '/dashboard', // CHANGE THIS BACK LATER
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
+        '/dashboard': (context) => const DashboardPage(), // Add the new route
       },
     );
   }
