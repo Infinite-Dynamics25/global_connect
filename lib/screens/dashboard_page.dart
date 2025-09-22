@@ -164,7 +164,7 @@ class _DashboardPageState extends State<DashboardPage> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                enabled: false,
+                enabled: true,
                 child: Text(
                   'My Account',
                   style: TextStyle(fontWeight: FontWeight.bold),
