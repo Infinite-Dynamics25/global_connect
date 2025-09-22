@@ -37,7 +37,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
-  String _selectedOrganization = 'Switch Account';
+  String _selectedOrganization = 'Switch Organization';
 
   void _onItemTapped(int index) {
     setState(() {
@@ -65,12 +65,12 @@ class _DashboardPageState extends State<DashboardPage> {
               children: <Widget>[
                 ListTile(
                   title: const Text(
-                    'Switch Account',
+                    'Switch Organization',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
                     setState(() {
-                      _selectedOrganization = 'Switch Account';
+                      _selectedOrganization = 'Switch Organization';
                     });
                     Navigator.of(dialogContext).pop();
                   },
@@ -250,7 +250,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 'Switch Organization',
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),
               ),
