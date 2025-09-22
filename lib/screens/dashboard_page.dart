@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'events_dashboard.dart';
 import 'settings.dart';
 import 'team.dart';
+import 'profile_page.dart';
+import 'security_page.dart';
+import 'logout_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +37,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
-  String _selectedOrganization = 'Acme Inc.';
+  String _selectedOrganization = 'Switch Account';
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,24 +50,27 @@ class _DashboardPageState extends State<DashboardPage> {
       context: context,
       builder: (BuildContext dialogContext) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
           elevation: 10,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 10.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ListTile(
                   title: const Text(
-                    'Acme Inc.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    'Switch Account',
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
                     setState(() {
-                      _selectedOrganization = 'Acme Inc.';
+                      _selectedOrganization = 'Switch Account';
                     });
                     Navigator.of(dialogContext).pop();
                   },
@@ -72,9 +78,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ListTile(
                   title: const Text(
                     'Global Connect',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
                     setState(() {
@@ -92,12 +96,19 @@ class _DashboardPageState extends State<DashboardPage> {
                       color: Colors.white,
                     ),
                   ),
-                  trailing: const Icon(Icons.add_circle_outline, color: Colors.white),
+                  trailing: const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white,
+                  ),
                   onTap: () {
                     // TODO: Implement navigation to create new organization page
                     Navigator.of(dialogContext).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Navigating to create new organization...')),
+                      const SnackBar(
+                        content: Text(
+                          'Navigating to create new organization...',
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -125,10 +136,55 @@ class _DashboardPageState extends State<DashboardPage> {
             );
           },
         ),
-        title: const Text(
-          'Home',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Home', style: TextStyle(color: Colors.white)),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            icon: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: Colors.blue),
+            ),
+            onSelected: (String result) {
+              if (result == 'Profile') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              } else if (result == 'Security') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SecurityPage()),
+                );
+              } else if (result == 'Logout') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LogoutPage()),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                enabled: false,
+                child: Text(
+                  'My Account',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem<String>(
+                value: 'Profile',
+                child: Text('Profile'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Security',
+                child: Text('Security'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Logout',
+                child: Text('Logout'),
+              ),
+            ],
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Container(
@@ -137,15 +193,10 @@ class _DashboardPageState extends State<DashboardPage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue[900],
-                ),
+                decoration: BoxDecoration(color: Colors.blue[900]),
                 child: const Text(
                   'Dashboard Menu',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 24),
                 ),
               ),
               ListTile(
@@ -155,7 +206,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.pop(context); // Close the drawer
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const EventsDashboardPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const EventsDashboardPage(),
+                    ),
                   );
                 },
               ),
@@ -177,7 +230,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SettingsPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ),
                   );
                 },
               ),
@@ -203,7 +258,10 @@ class _DashboardPageState extends State<DashboardPage> {
               GestureDetector(
                 onTap: () => _showOrganizationDropdown(context),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12),
@@ -252,10 +310,7 @@ class _DashboardPageState extends State<DashboardPage> {
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow[600],
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
             label: 'Organizations',
