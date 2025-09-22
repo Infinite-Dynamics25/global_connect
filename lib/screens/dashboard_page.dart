@@ -5,6 +5,7 @@ import 'team.dart';
 import 'profile_page.dart';
 import 'security_page.dart';
 import 'logout_page.dart';
+import 'speaker_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -213,6 +214,19 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.mic, color: Colors.blue),
+                title: const Text('Speaker'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SpeakerPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.group, color: Colors.blue),
                 title: const Text('Team'),
                 onTap: () {
@@ -263,7 +277,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: const Color.fromARGB(255, 229, 230, 161),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
