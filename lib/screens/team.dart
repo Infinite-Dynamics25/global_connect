@@ -34,7 +34,7 @@ class TeamPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow[600],
+                  backgroundColor: const Color.fromARGB(255, 199, 106, 25),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class SpeakerPage extends StatelessWidget {
-  const SpeakerPage({super.key});
+class VenuesPage extends StatelessWidget {
+  const VenuesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Speakers',
+          'Venues',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue[900],
@@ -18,18 +18,18 @@ class SpeakerPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton.icon(
               onPressed: () {
-                // TODO: Implement add speaker functionality
+                // TODO: Implement add venue functionality
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Add Speaker button pressed!')),
+                  const SnackBar(content: Text('Add Venue button pressed!')),
                 );
               },
-              icon: const Icon(Icons.person_add, color: Colors.white),
+              icon: const Icon(Icons.add_location, color: Colors.white),
               label: const Text(
-                'Add Speaker',
+                'Add Venue',
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 227, 104, 33),
+                backgroundColor: Colors.orange[600],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -43,7 +43,7 @@ class SpeakerPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'No Speaker Found',
+              'No Venues Found',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -53,7 +53,7 @@ class SpeakerPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Get started by adding your first speaker.',
+              'Get started by adding your first venue.',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.blueGrey[600],
