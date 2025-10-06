@@ -1,80 +1,148 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-// ...existing code
+import 'register_page.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  // Function to navigate to the Register Page
+  void _navigateToRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const RegisterPage()),
+    );
   }
 
-  void _login() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
+  void _onLoginPressed(BuildContext context) {
+    // Placeholder for actual login logic
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Attempting to log in...')));
+    // In a real app, successful login would lead to the Dashboard
+  }
 
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter email and password')),
-      );
-    } else {
-      if (kDebugMode) {
-        print('Login attempted with Email: $email, Password: $password');
-      }
-      // Here you would add the logic to authenticate the user
-    }
+  // Helper widget to build consistent text fields
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    bool isPassword = false,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      obscureText: isPassword,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.blueGrey),
+        prefixIcon: Icon(icon, color: const Color(0xFFFF9800)), // Orange icon
+        filled: true,
+        fillColor: Colors.blue[50], // Very light blue background
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.blue[900]!, width: 2),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.emailAddress,
+      appBar: AppBar(
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blue[900],
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(32.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const Text(
+                  'Sign in to your Account',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0D47A1), // Dark Blue
+                  ),
+                ),
+                const SizedBox(height: 40),
+
+                // Email Field
+                _buildTextField(
+                  label: 'Email',
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
+
+                // Password Field
+                _buildTextField(
+                  label: 'Password',
+                  icon: Icons.lock_outline,
+                  isPassword: true,
+                ),
+                const SizedBox(height: 40),
+
+                // Login Button
+                ElevatedButton(
+                  onPressed: () => _onLoginPressed(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800), // Orange
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 5,
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Sign Up Link
+                GestureDetector(
+                  onTap: () => _navigateToRegister(context),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Don\'t have an account? ',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Sign up',
+                            style: TextStyle(
+                              color: Colors.blue[900], // Dark Blue
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(onPressed: _login, child: const Text('Login')),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {
-                // This line navigates to the registration page.
-                Navigator.pushNamed(context, '/register');
-              },
-              child: const Text('Don\'t have an account? Register'),
-            ),
-          ],
+          ),
         ),
       ),
     );

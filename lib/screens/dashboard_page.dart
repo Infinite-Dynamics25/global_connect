@@ -1,34 +1,14 @@
 import 'package:flutter/material.dart';
-import 'events_dashboard.dart';
+import 'events_page.dart';
 import 'settings.dart';
 import 'team.dart';
+import 'speaker_page.dart';
+import 'venues_page.dart';
 import 'profile_page.dart';
 import 'security_page.dart';
 import 'logout_page.dart';
-import 'speaker_page.dart';
-import 'venues_page.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Dashboard App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Inter',
-      ),
-      home: const DashboardPage(),
-    );
-  }
-}
+import 'login_page.dart';
+import 'register_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -39,7 +19,16 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
-  String _selectedOrganization = 'Acme Inc.';
+  String _selectedOrganization = 'Switch Organization';
+
+  // List of pages for the BottomNavigationBar (Note: These pages no longer have their own AppBars)
+  final List<Widget> _pages = [
+    const EventPage(),
+    const TeamPage(),
+    const SpeakerPage(),
+    const VenuesPage(),
+    const SettingsPage(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,29 +36,32 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
-  void _showOrganizationDropdown(BuildContext context) {
+  void _showOrganizationDropdown(BuildContext dialogContext) {
     showDialog(
-      context: context,
+      context: dialogContext,
       builder: (BuildContext dialogContext) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
           elevation: 10,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 10.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ListTile(
                   title: const Text(
-                    'Acme Inc.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    'Switch Organization',
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
                     setState(() {
-                      _selectedOrganization = 'Acme Inc.';
+                      _selectedOrganization = 'Switch Organization';
                     });
                     Navigator.of(dialogContext).pop();
                   },
@@ -77,9 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ListTile(
                   title: const Text(
                     'Global Connect',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
                     setState(() {
@@ -97,12 +87,18 @@ class _DashboardPageState extends State<DashboardPage> {
                       color: Colors.white,
                     ),
                   ),
-                  trailing: const Icon(Icons.add_circle_outline, color: Colors.white),
+                  trailing: const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white,
+                  ),
                   onTap: () {
-                    // TODO: Implement navigation to create new organization page
                     Navigator.of(dialogContext).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Navigating to create new organization...')),
+                    ScaffoldMessenger.of(dialogContext).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Navigating to create new organization...',
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -114,26 +110,18 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
+  // Helper function for navigating from the Drawer
+  void _navigateToPage(Widget page) {
+    Navigator.pop(context); // Close the drawer
+    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
         elevation: 0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(color: Colors.white),
-        ),
         actions: <Widget>[
           GestureDetector(
             onTap: () => _showOrganizationDropdown(context),
@@ -145,7 +133,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     _selectedOrganization,
@@ -167,20 +154,11 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             onSelected: (String result) {
               if (result == 'Profile') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
-                );
+                _navigateToPage(const ProfilePage());
               } else if (result == 'Security') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecurityPage()),
-                );
+                _navigateToPage(const SecurityPage());
               } else if (result == 'Logout') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogoutPage()),
-                );
+                _navigateToPage(const LogoutPage());
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -188,9 +166,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 enabled: false,
                 child: Text(
                   'My Account',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               const PopupMenuDivider(),
@@ -212,130 +188,166 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       drawer: Drawer(
         child: Container(
-          color: Colors.white,
+          color: Colors.blue[900],
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue[900],
+                decoration: BoxDecoration(color: Colors.blue[900]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.orange[600],
+                      radius: 30,
+                      child: const Icon(
+                        Icons.business,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _selectedOrganization,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                child: const Text(
-                  'Dashboard Menu',
+              ),
+              ListTile(
+                leading: const Icon(Icons.dashboard, color: Colors.white),
+                title: const Text(
+                  'Event\'s Dashboard',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  setState(() {
+                    _selectedIndex = 0;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.mic, color: Colors.white),
+                title: const Text(
+                  'Speaker',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  setState(() {
+                    _selectedIndex = 2;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings, color: Colors.white),
+                title: const Text(
+                  'Settings',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  setState(() {
+                    _selectedIndex = 4;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.group, color: Colors.white),
+                title: const Text(
+                  'Team',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  setState(() {
+                    _selectedIndex = 1;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.location_city, color: Colors.white),
+                title: const Text(
+                  'Venues',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  setState(() {
+                    _selectedIndex = 3;
+                  });
+                },
+              ),
+              // --- Login Link added to the Drawer ---
+              const Divider(color: Colors.white54),
+              ListTile(
+                leading: const Icon(Icons.login, color: Colors.white),
+                title: const Text(
+                  'Login',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                onTap: () => _navigateToPage(
+                  const LoginPage(),
+                ), // Linked to the LoginPage
               ),
-              ListTile(
-                leading: const Icon(Icons.dashboard, color: Colors.blue),
-                title: const Text('Event\'s Dashboard'),
-                onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EventsDashboardPage()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.mic, color: Colors.blue),
-                title: const Text('Speaker'),
-                onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SpeakerPage()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.location_on, color: Colors.blue),
-                title: const Text('Venues'),
-                onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const VenuesPage()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.group, color: Colors.blue),
-                title: const Text('Team'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TeamPage()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings, color: Colors.blue),
-                title: const Text('Settings'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SettingsPage()),
-                  );
-                },
-              ),
+              // --- End Login Link ---
             ],
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Placeholder for the dashboard content
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Dashboard Content Here',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.blue[900],
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Colors.orange[600],
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(
+              Icons.dashboard,
+              color: _selectedIndex == 0 ? Colors.orange : Colors.white,
+            ),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Organizations',
+            icon: Icon(
+              Icons.group,
+              color: _selectedIndex == 1 ? Colors.orange : Colors.white,
+            ),
+            label: 'Team',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(
+              Icons.mic,
+              color: _selectedIndex == 2 ? Colors.orange : Colors.white,
+            ),
+            label: 'Speaker',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.location_city,
+              color: _selectedIndex == 3 ? Colors.orange : Colors.white,
+            ),
+            label: 'Venues',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings,
+              color: _selectedIndex == 4 ? Colors.orange : Colors.white,
+            ),
             label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.white,
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
